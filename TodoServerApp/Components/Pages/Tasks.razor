@@ -1,0 +1,46 @@
+﻿@page "/"
+@inject IDataService data
+
+
+<PageTitle>Задачи</PageTitle>
+
+<h1>Мои задачи</h1>
+
+<p>Список моих задач:</p>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ИД</th>
+            <th>Заголовок</th>
+            <th>Описание</th>
+            <th>Создано</th>
+            <th>Завершено</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in tasks)
+        {
+            <tr>
+                <td>@task.Id</td>
+                <td>@task.Title</td>
+                <td>@task.Description</td>
+                <td>@task.CreatedDate</td>
+                <td>@task.FinishdDate</td>
+            </tr>
+        }
+    </tbody>
+    
+</table>
+
+
+
+@code {
+    IEnumerable<TaskItem> tasks;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        tasks = data.GetTaskItems();
+    }
+}
