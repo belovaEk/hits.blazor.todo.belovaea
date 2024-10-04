@@ -1,6 +1,7 @@
 ﻿@page "/"
+@rendermode InteractiveServer
 @inject IDataService data
-
+@attribute [Authorize]
 
 <PageTitle>Задачи</PageTitle>
 
@@ -19,16 +20,26 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var task in tasks)
+        @if (tasks == null)
         {
             <tr>
-                <td>@task.Id</td>
-                <td>@task.Title</td>
-                <td>@task.Description</td>
-                <td>@task.CreatedDate</td>
-                <td>@task.FinishdDate</td>
+                <td colspan="5">Loading...</td>
             </tr>
         }
+        else
+        {
+            @foreach (var task in tasks)
+            {
+                <tr>
+                    <td>@task.Id</td>
+                    <td>@task.Title</td>
+                    <td>@task.Description</td>
+                    <td>@task.CreatedDate</td>
+                    <td>@task.FinishdDate</td>
+                </tr>
+            }
+        }
+        
     </tbody>
     
 </table>
@@ -36,11 +47,11 @@
 
 
 @code {
-    IEnumerable<TaskItem> tasks;
+    IEnumerable<TaskItem>? tasks;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        base.OnInitialized();
-        tasks = data.GetTaskItems();
+        await base.OnInitializedAsync();
+        tasks = await data.GetTaskItemsAsync();
     }
 }
